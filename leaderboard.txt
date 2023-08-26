@@ -1,0 +1,8 @@
+﻿testing1: 5000
+testing2: 4000
+testing3: 3000
+testing4: 2000
+testing5: 1000
+testing6: 0
+testing7: 0
+testing8: 0

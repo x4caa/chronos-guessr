@@ -34,6 +34,7 @@ namespace chronosguessr
         {
             Size screen = getScreenSize();
             playButton.Text = "Play";
+
             //font size is 50 on 1080p, 33 on 720p
             playButton.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 38.4), FontStyle.Bold);
             playButton.Size = new Size(screen.Width / 3, screen.Height / 8);
@@ -49,6 +50,10 @@ namespace chronosguessr
             leaderboardText.ReadOnly = true;
             leaderboardText.TabStop = true;
             leaderboardText.Size = new Size(playButton.Width, screen.Height / 5);
+            leaderboardText.TextAlign = HorizontalAlignment.Center;
+            leaderboardText.Text =
+                "Leaderboard\r\n" +
+                "";
 
             leaderboardText.Location = new Point(playButton.Location.X, playButton.Location.Y + playButton.Size.Height + screen.Height / 20);
             Output.OutputText("RESIZED LEADERBOARD TEXT", outputBox);

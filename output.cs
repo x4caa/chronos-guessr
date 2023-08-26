@@ -2,7 +2,7 @@
 {
     public partial class Output
     {
-        public static void OutputText(string text, TextBox outputBox)
+        public static void OutputText(string text, Label outputBox)
         {
             string currentText = outputBox.Text;
             if (GetLineCount(currentText) >= 50)

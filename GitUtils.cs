@@ -23,5 +23,12 @@ namespace chronosguessr
                 }
             }
         }
+
+        public static async Task<string[]> GetLines(Task<string> textTask)
+        {
+            string text = await textTask;
+            string[] lines = text.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            return lines;
+        }
     }
 }

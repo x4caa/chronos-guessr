@@ -28,47 +28,59 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.playButton = new System.Windows.Forms.Button();
-            this.leaderboardText = new System.Windows.Forms.TextBox();
-            this.outputBox = new System.Windows.Forms.TextBox();
+            this.leaderboardLabel = new System.Windows.Forms.Label();
+            this.outputLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // playButton
             // 
+            this.playButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.playButton.FlatAppearance.BorderSize = 0;
+            this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playButton.Font = new System.Drawing.Font("Minecraft Ten", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.playButton.ForeColor = System.Drawing.SystemColors.ControlText;
             this.playButton.Location = new System.Drawing.Point(569, 275);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(75, 23);
             this.playButton.TabIndex = 0;
             this.playButton.Text = "button1";
-            this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.UseVisualStyleBackColor = false;
             this.playButton.Click += new System.EventHandler(this.playButton_Click);
             // 
-            // leaderboardText
+            // leaderboardLabel
             // 
-            this.leaderboardText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.leaderboardText.Location = new System.Drawing.Point(557, 327);
-            this.leaderboardText.Name = "leaderboardText";
-            this.leaderboardText.Size = new System.Drawing.Size(100, 16);
-            this.leaderboardText.TabIndex = 1;
-            this.leaderboardText.TextChanged += new System.EventHandler(this.leaderboardText_TextChanged);
+            this.leaderboardLabel.AutoSize = true;
+            this.leaderboardLabel.BackColor = System.Drawing.Color.Transparent;
+            this.leaderboardLabel.ForeColor = System.Drawing.Color.White;
+            this.leaderboardLabel.Location = new System.Drawing.Point(588, 323);
+            this.leaderboardLabel.Name = "leaderboardLabel";
+            this.leaderboardLabel.Size = new System.Drawing.Size(38, 15);
+            this.leaderboardLabel.TabIndex = 3;
+            this.leaderboardLabel.Text = "label1";
             // 
-            // outputBox
+            // outputLabel
             // 
-            this.outputBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.outputBox.Location = new System.Drawing.Point(12, 12);
-            this.outputBox.Name = "outputBox";
-            this.outputBox.Size = new System.Drawing.Size(100, 16);
-            this.outputBox.TabIndex = 2;
+            this.outputLabel.AutoSize = true;
+            this.outputLabel.BackColor = System.Drawing.Color.Transparent;
+            this.outputLabel.Location = new System.Drawing.Point(12, 9);
+            this.outputLabel.Name = "outputLabel";
+            this.outputLabel.Size = new System.Drawing.Size(38, 15);
+            this.outputLabel.TabIndex = 4;
+            this.outputLabel.Text = "label1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1264, 681);
-            this.Controls.Add(this.outputBox);
-            this.Controls.Add(this.leaderboardText);
+            this.Controls.Add(this.outputLabel);
+            this.Controls.Add(this.leaderboardLabel);
             this.Controls.Add(this.playButton);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -80,7 +92,7 @@
         #endregion
 
         private Button playButton;
-        private TextBox leaderboardText;
-        private TextBox outputBox;
+        private Label leaderboardLabel;
+        private Label outputLabel;
     }
 }

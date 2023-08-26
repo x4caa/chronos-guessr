@@ -24,8 +24,24 @@ namespace chronosguessr
             NameBoxInit();
 
             playButton.Paint += playButton_Paint;
+
+            this.FormClosed += Form1_FormClosed;
         }
 
+        private void Form1_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            List<Form> formsToModify = new List<Form>();
+
+            foreach (Form openForm in Application.OpenForms)
+            {
+                formsToModify.Add(openForm);
+            }
+
+            foreach (Form form in formsToModify)
+            {
+                form.Close();
+            }
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -38,6 +54,12 @@ namespace chronosguessr
             if (nameBox.Text.Length <= 0 && !globalData.notifPlaying)
             {
                 NotificationUtils.SpawnNotif("Please Add a Name", 1000, screen.Width / 2 - TextRenderer.MeasureText("Please Add a Name", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
+            }
+            else if (nameBox.Text.Length <= 16 && !globalData.notifPlaying)
+            {
+                Form gameform = new GameForm();
+                gameform.Show();
+                this.Hide();
             }
         }
 

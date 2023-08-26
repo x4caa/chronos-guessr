@@ -15,12 +15,13 @@ namespace chronosguessr
             globalData.previousSize = this.Size;
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            // init
             PlayButtonInit();
             _ = leaderboardLabelInitAsync();
             OutputBoxInit();
             NameLabelInit();
             NameBoxInit();
-
 
             playButton.Paint += playButton_Paint;
         }
@@ -33,7 +34,11 @@ namespace chronosguessr
 
         private void playButton_Click(object sender, EventArgs e)
         {
-
+            Size screen = getScreenSize();
+            if (nameBox.Text.Length <= 0 && !globalData.notifPlaying)
+            {
+                NotificationUtils.SpawnNotif("Please Add a Name", 1000, screen.Width / 2 - TextRenderer.MeasureText("Please Add a Name", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
+            }
         }
 
         private void PlayButtonInit()
@@ -127,7 +132,7 @@ namespace chronosguessr
             outputLabel.Location = new Point(0, -15);
         }
 
-        private Size getScreenSize()
+        public static Size getScreenSize()
         {
             Screen mainScreen = Screen.PrimaryScreen;
             return new Size(mainScreen.Bounds.Width, mainScreen.Bounds.Height);
@@ -173,11 +178,9 @@ namespace chronosguessr
         }
     }
 
-    static class globalData
+    public static class globalData
     {
         public static Size previousSize;
-        public static int targetY;
-        public static int TargetY;
-        public static int initialY;
+        public static bool notifPlaying;
     }
 }

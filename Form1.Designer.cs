@@ -32,6 +32,8 @@
             this.playButton = new System.Windows.Forms.Button();
             this.leaderboardLabel = new System.Windows.Forms.Label();
             this.outputLabel = new System.Windows.Forms.Label();
+            this.nameBox = new System.Windows.Forms.TextBox();
+            this.nameLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // playButton
@@ -54,7 +56,7 @@
             this.leaderboardLabel.AutoSize = true;
             this.leaderboardLabel.BackColor = System.Drawing.Color.Transparent;
             this.leaderboardLabel.ForeColor = System.Drawing.Color.White;
-            this.leaderboardLabel.Location = new System.Drawing.Point(588, 323);
+            this.leaderboardLabel.Location = new System.Drawing.Point(588, 345);
             this.leaderboardLabel.Name = "leaderboardLabel";
             this.leaderboardLabel.Size = new System.Drawing.Size(38, 15);
             this.leaderboardLabel.TabIndex = 3;
@@ -64,11 +66,30 @@
             // 
             this.outputLabel.AutoSize = true;
             this.outputLabel.BackColor = System.Drawing.Color.Transparent;
+            this.outputLabel.ForeColor = System.Drawing.Color.Red;
             this.outputLabel.Location = new System.Drawing.Point(12, 9);
             this.outputLabel.Name = "outputLabel";
             this.outputLabel.Size = new System.Drawing.Size(38, 15);
             this.outputLabel.TabIndex = 4;
             this.outputLabel.Text = "label1";
+            // 
+            // nameBox
+            // 
+            this.nameBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nameBox.Font = new System.Drawing.Font("Magneto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.nameBox.Location = new System.Drawing.Point(559, 320);
+            this.nameBox.Name = "nameBox";
+            this.nameBox.Size = new System.Drawing.Size(100, 22);
+            this.nameBox.TabIndex = 5;
+            // 
+            // nameLabel
+            // 
+            this.nameLabel.AutoSize = true;
+            this.nameLabel.Location = new System.Drawing.Point(588, 301);
+            this.nameLabel.Name = "nameLabel";
+            this.nameLabel.Size = new System.Drawing.Size(38, 15);
+            this.nameLabel.TabIndex = 6;
+            this.nameLabel.Text = "label1";
             // 
             // Form1
             // 
@@ -77,6 +98,8 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.nameLabel);
+            this.Controls.Add(this.nameBox);
             this.Controls.Add(this.outputLabel);
             this.Controls.Add(this.leaderboardLabel);
             this.Controls.Add(this.playButton);
@@ -94,5 +117,7 @@
         private Button playButton;
         private Label leaderboardLabel;
         private Label outputLabel;
+        private TextBox nameBox;
+        private Label nameLabel;
     }
 }

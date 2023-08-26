@@ -30,6 +30,7 @@
         {
             this.playButton = new System.Windows.Forms.Button();
             this.leaderboardText = new System.Windows.Forms.TextBox();
+            this.outputBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // playButton
@@ -52,11 +53,20 @@
             this.leaderboardText.TabIndex = 1;
             this.leaderboardText.TextChanged += new System.EventHandler(this.leaderboardText_TextChanged);
             // 
+            // outputBox
+            // 
+            this.outputBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.outputBox.Location = new System.Drawing.Point(12, 12);
+            this.outputBox.Name = "outputBox";
+            this.outputBox.Size = new System.Drawing.Size(100, 16);
+            this.outputBox.TabIndex = 2;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.outputBox);
             this.Controls.Add(this.leaderboardText);
             this.Controls.Add(this.playButton);
             this.Name = "Form1";
@@ -71,5 +81,6 @@
 
         private Button playButton;
         private TextBox leaderboardText;
+        private TextBox outputBox;
     }
 }

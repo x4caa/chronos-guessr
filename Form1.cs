@@ -223,5 +223,6 @@ namespace chronosguessr
         public static Size previousSize;
         public static bool notifPlaying;
         public static bool doneDownloading = false;
+        public static Panel currPin;
     }
 }

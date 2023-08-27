@@ -27,6 +27,8 @@ namespace chronosguessr
             GuessButtonInit();
             this.FormClosed += GameForm_FormClosed;
             Map.MouseClick += Map_MouseClick;
+
+            SetNewImage();
         }
 
         private void Map_MouseClick(object? sender, MouseEventArgs e)
@@ -39,8 +41,7 @@ namespace chronosguessr
             {
                 int scaledX = (int)((float)relativeClickPoint.X / Map.Width * 1024);
                 int scaledY = (int)((float)relativeClickPoint.Y / Map.Height * 1024);
-
-                Output.OutputText($"Scaled Clicked at ({scaledX}, {scaledY})", outputLabel);
+                SpawnPin(new Vector2(Map.Location.X + relativeClickPoint.X, Map.Location.Y + relativeClickPoint.Y));
 
             }
         }
@@ -92,6 +93,7 @@ namespace chronosguessr
 
         private void GuessButton_Paint(object? sender, PaintEventArgs e)
         {
+            Output.OutputText($"PAINTING GUESS BUTTON", outputLabel);
             Button button = (Button)sender;
             int borderRadius = 10;
 
@@ -139,7 +141,7 @@ namespace chronosguessr
             }
         }
 
-        private List<int> previousSelections = new List<int>(); // Create a list to store previous selections
+        private List<int> previousSelections = new List<int>();
 
         private void SetNewImage()
         {
@@ -148,13 +150,11 @@ namespace chronosguessr
 
             if (previousSelections.Count >= totalImages)
             {
-                // All images have been used, reset the previousSelections list
                 previousSelections.Clear();
             }
 
             int randomIndex;
 
-            // Keep generating a random index until a new, unused one is found
             do
             {
                 randomIndex = new Random().Next(0, totalImages);
@@ -163,11 +163,30 @@ namespace chronosguessr
             this.BackgroundImage = new System.Drawing.Bitmap(images[randomIndex]);
             Output.OutputText($"Loaded image: {images[randomIndex]}", outputLabel);
             Output.OutputText($"Image location: {GetImageLocation(images[randomIndex])}", outputLabel);
-            currentPlay = 1;
+            currentPlay += 1;
 
-            // Store the new index in previousSelections
             previousSelections.Add(randomIndex);
         }
 
+        private void SpawnPin(Vector2 position)
+        {
+            if (globalData.currPin != null)
+            {
+                globalData.currPin.Location = new Point((int)position.X - globalData.currPin.Width / 2, (int)position.Y - globalData.currPin.Height / 2);
+            }
+            else
+            {
+                Panel pin2 = new Panel();
+                pin2.BorderStyle = BorderStyle.None;
+                pin2.Size = new Size(14, 14);
+                pin2.BackColor = Color.Transparent;
+                pin2.Location = new Point((int)position.X - pin2.Width / 2, (int)position.Y - pin2.Height / 2);
+                pin2.BackgroundImage = Properties.Resources.ChronosPin;
+
+                this.Controls.Add(pin2);
+                pin2.BringToFront();
+                globalData.currPin = pin2;
+            }
+        }
     }
 }

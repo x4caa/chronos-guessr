@@ -10,7 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\ChronosMap.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="compass-still.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\ChronosMap.png" />
   </ItemGroup>
 
   <ItemGroup>

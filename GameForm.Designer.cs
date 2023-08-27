@@ -50,6 +50,7 @@
             // 
             this.Map.BackColor = System.Drawing.Color.Black;
             this.Map.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Map.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Map.ErrorImage = null;
             this.Map.Image = ((System.Drawing.Image)(resources.GetObject("Map.Image")));
             this.Map.ImageLocation = "";

@@ -48,7 +48,7 @@
             // 
             // Map
             // 
-            this.Map.BackColor = System.Drawing.Color.Black;
+            this.Map.BackColor = System.Drawing.Color.Transparent;
             this.Map.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Map.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Map.ErrorImage = null;

@@ -41,6 +41,8 @@ namespace chronosguessr
             {
                 int scaledX = (int)((float)relativeClickPoint.X / Map.Width * 1024);
                 int scaledY = (int)((float)relativeClickPoint.Y / Map.Height * 1024);
+                Output.OutputText($"CLICKED AT: {scaledX - 512}, {scaledY - 512}", outputLabel);
+                globalData.currGuess = new Vector2(scaledX - 512, scaledY - 512);
                 SpawnPin(new Vector2(Map.Location.X + relativeClickPoint.X, Map.Location.Y + relativeClickPoint.Y));
 
             }
@@ -70,8 +72,22 @@ namespace chronosguessr
         {
             Size screen = getScreenSize();
             Map.Size = new Size(screen.Width / 4, screen.Width / 4);
-            Map.BorderStyle = BorderStyle.FixedSingle;
+            Map.Image = Properties.Resources.ChronosMapAlpha;
+            Map.BorderStyle = BorderStyle.None;
             Map.Location = new Point(screen.Width - Map.Width - 10, screen.Height - Map.Height - screen.Height / 8);
+
+            Map.MouseEnter += Map_MouseEnter;
+            Map.MouseLeave += Map_MouseLeave;
+        }
+
+        private void Map_MouseLeave(object? sender, EventArgs e)
+        {
+            Map.Image = Properties.Resources.ChronosMapAlpha;
+        }
+
+        private void Map_MouseEnter(object? sender, EventArgs e)
+        {
+            Map.Image = Properties.Resources.ChronosMap;
         }
 
         private void GuessButtonInit()
@@ -167,6 +183,16 @@ namespace chronosguessr
 
             previousSelections.Add(randomIndex);
         }
+        private void PinInit()
+        {
+            Panel pin = globalData.currPin;
+            pin.MouseEnter += Pin_MouseEnter;
+        }
+
+        private void Pin_MouseEnter(object? sender, EventArgs e)
+        {
+            Map.Image = Properties.Resources.ChronosMap;
+        }
 
         private void SpawnPin(Vector2 position)
         {
@@ -186,9 +212,13 @@ namespace chronosguessr
                 this.Controls.Add(pin2);
                 pin2.BringToFront();
                 globalData.currPin = pin2;
+                PinInit();
             }
+
+            int scaledX = (int)((float)(globalData.currPin.Location.X - globalData.currPin.Width / 2) / Map.Width * 1024);
+            int scaledY = (int)((float)(globalData.currPin.Location.X - globalData.currPin.Height / 2) / Map.Height * 1024);
             Output.OutputText($"Spawned pin at: {position}", outputLabel);
-            Output.OutputText($"pin is at {globalData.currPin.Location.X - Map.Location.X - globalData.currPin.Width / 2}, {globalData.currPin.Location.Y - Map.Location.Y - globalData.currPin.Height / 2}", outputLabel);
+            Output.OutputText($"pin is at {scaledX - Map.Location.X - 512}, {scaledY - Map.Location.Y - 512}", outputLabel);
         }
 
         private void GuessButton_Click(object sender, EventArgs e)
@@ -201,13 +231,13 @@ namespace chronosguessr
 
         private void CalcPoints(Point pos)
         {
-            int scaledX = (int)((float)(pos.X - globalData.currPin.Width / 2) / Map.Width * 1024) - 512;
-            int scaledY = (int)((float)(pos.Y - globalData.currPin.Height / 2) / Map.Height * 1024) - 512;
             Vector2 imagePos = globalData.imagePos;
-            int dx = (int)(imagePos.X - scaledX);
-            int dy = (int)(imagePos.Y - scaledY);
+
+            int dx = (int)(imagePos.X - globalData.currGuess.X);
+            int dy = (int)(imagePos.Y - globalData.currGuess.Y);
             int distance = (int)Math.Sqrt(dx * dx + dy * dy);
             int score = (int)Math.Round(1000.0 / (distance + 1));
+            //score = 1000 - score;
 
             overallScore += score;
             Output.OutputText($"Distance: {distance}", outputLabel);

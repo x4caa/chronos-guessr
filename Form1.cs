@@ -23,6 +23,7 @@ namespace chronosguessr
             OutputBoxInit();
             NameLabelInit();
             NameBoxInit();
+            SettingsGearInit();
 
             playButton.Paint += playButton_Paint;
 
@@ -116,6 +117,73 @@ namespace chronosguessr
                 button.Region = new Region(path);
             }
         }
+
+        private bool SettingsOpen = false;
+        private void SettingsGearInit()
+        {
+            Size screen = getScreenSize();
+            SettingsGear.Image = Properties.Resources.SettingsGear;
+            SettingsGear.BorderStyle = BorderStyle.None;
+            SettingsGear.BackColor = Color.Transparent;
+            SettingsGear.SizeMode = PictureBoxSizeMode.StretchImage;
+            SettingsGear.Size = new Size(screen.Width / 40, screen.Width / 40);
+            SettingsGear.Location = new Point(screen.Width - SettingsGear.Width - 5, 5);
+
+            SettingsGear.Click += SettingsGear_Click;
+        }
+
+        private void SettingsGear_Click(object? sender, EventArgs e)
+        {
+            if (!SettingsOpen)
+            {
+                SettingsOpen = true;
+                Output.OutputText("setting gear clicked", outputLabel);
+                Size screen = getScreenSize();
+                Panel SettingBack = new Panel();
+                SettingBack.Name = "SMenuBack";
+                SettingBack.BorderStyle = BorderStyle.None;
+                SettingBack.BackColor = ColorTranslator.FromHtml("#007FE0");
+                SettingBack.Size = new Size(screen.Width / 6, screen.Height / 4);
+                SettingBack.Location = new Point(screen.Width - SettingBack.Width - 5, SettingsGear.Bottom + 5);
+                SettingBack.Paint += SettingBack_Paint;
+
+
+                this.Controls.Add(SettingBack);
+            }
+            else
+            {
+                SettingsOpen = false;
+                foreach (Control control in this.Controls)
+                {
+                    Output.OutputText($"{control.Name}", outputLabel);
+                    if (control.Name.Contains("SMenu"))
+                    {
+                        control.Hide();
+                    }
+                }
+            }
+
+        }
+
+        private void SettingBack_Paint(object? sender, PaintEventArgs e)
+        {
+            Panel panel = (Panel)sender;
+            int borderRadius = 15;
+
+            Rectangle bounds = new Rectangle(0, 0, panel.Width, panel.Height);
+
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddArc(bounds.Left, bounds.Top, borderRadius * 2, borderRadius * 2, 180, 90);
+                path.AddArc(bounds.Right - borderRadius * 2, bounds.Top, borderRadius * 2, borderRadius * 2, 270, 90);
+                path.AddArc(bounds.Right - borderRadius * 2, bounds.Bottom - borderRadius * 2, borderRadius * 2, borderRadius * 2, 0, 90);
+                path.AddArc(bounds.Left, bounds.Bottom - borderRadius * 2, borderRadius * 2, borderRadius * 2, 90, 90);
+                path.CloseFigure();
+
+                panel.Region = new Region(path);
+            }
+        }
+
         private void NameLabelInit()
         {
             Size screen = getScreenSize();
@@ -228,5 +296,6 @@ namespace chronosguessr
         public static bool doneDownloading = false;
         public static Panel currPin;
         public static Vector2 imagePos;
+        public static Vector2 currGuess;
     }
 }

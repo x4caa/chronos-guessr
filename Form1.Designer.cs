@@ -34,6 +34,8 @@
             this.outputLabel = new System.Windows.Forms.Label();
             this.nameBox = new System.Windows.Forms.TextBox();
             this.nameLabel = new System.Windows.Forms.Label();
+            this.SettingsGear = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsGear)).BeginInit();
             this.SuspendLayout();
             // 
             // playButton
@@ -91,6 +93,14 @@
             this.nameLabel.TabIndex = 6;
             this.nameLabel.Text = "label1";
             // 
+            // SettingsGear
+            // 
+            this.SettingsGear.Location = new System.Drawing.Point(1202, 12);
+            this.SettingsGear.Name = "SettingsGear";
+            this.SettingsGear.Size = new System.Drawing.Size(50, 50);
+            this.SettingsGear.TabIndex = 7;
+            this.SettingsGear.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -98,6 +108,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.SettingsGear);
             this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.nameBox);
             this.Controls.Add(this.outputLabel);
@@ -108,6 +119,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.SettingsGear)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -120,5 +132,6 @@
         private Label outputLabel;
         private TextBox nameBox;
         private Label nameLabel;
+        private PictureBox SettingsGear;
     }
 }

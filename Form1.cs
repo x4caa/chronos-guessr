@@ -1,4 +1,5 @@
 using System.Drawing.Drawing2D;
+using System.Numerics;
 
 namespace chronosguessr
 {
@@ -143,6 +144,7 @@ namespace chronosguessr
         }
         private async Task leaderboardLabelInitAsync()
         {
+            leaderboardLabel.Hide();
             Size screen = getScreenSize();
 
             leaderboardLabel.TextAlign = ContentAlignment.TopCenter;
@@ -163,6 +165,7 @@ namespace chronosguessr
 
             leaderboardLabel.Location = new Point(screen.Width - textSize.Width - screen.Width / 50, screen.Height / 2 - textSize.Height / 2);
             Output.OutputText("RESIZED LEADERBOARD TEXT", outputLabel);
+            leaderboardLabel.Show();
         }
 
         private void OutputBoxInit()
@@ -224,5 +227,6 @@ namespace chronosguessr
         public static bool notifPlaying;
         public static bool doneDownloading = false;
         public static Panel currPin;
+        public static Vector2 imagePos;
     }
 }

@@ -93,7 +93,6 @@ namespace chronosguessr
 
         private void GuessButton_Paint(object? sender, PaintEventArgs e)
         {
-            Output.OutputText($"PAINTING GUESS BUTTON", outputLabel);
             Button button = (Button)sender;
             int borderRadius = 10;
 
@@ -163,6 +162,7 @@ namespace chronosguessr
             this.BackgroundImage = new System.Drawing.Bitmap(images[randomIndex]);
             Output.OutputText($"Loaded image: {images[randomIndex]}", outputLabel);
             Output.OutputText($"Image location: {GetImageLocation(images[randomIndex])}", outputLabel);
+            globalData.imagePos = GetImageLocation(images[randomIndex]);
             currentPlay += 1;
 
             previousSelections.Add(randomIndex);
@@ -187,6 +187,32 @@ namespace chronosguessr
                 pin2.BringToFront();
                 globalData.currPin = pin2;
             }
+            Output.OutputText($"Spawned pin at: {position}", outputLabel);
+            Output.OutputText($"pin is at {globalData.currPin.Location.X - Map.Location.X - globalData.currPin.Width / 2}, {globalData.currPin.Location.Y - Map.Location.Y - globalData.currPin.Height / 2}", outputLabel);
+        }
+
+        private void GuessButton_Click(object sender, EventArgs e)
+        {
+            if (globalData.currPin != null)
+            {
+                CalcPoints(new Point(globalData.currPin.Location.X - Map.Location.X, globalData.currPin.Location.Y - Map.Location.Y));
+            }
+        }
+
+        private void CalcPoints(Point pos)
+        {
+            int scaledX = (int)((float)(pos.X - globalData.currPin.Width / 2) / Map.Width * 1024) - 512;
+            int scaledY = (int)((float)(pos.Y - globalData.currPin.Height / 2) / Map.Height * 1024) - 512;
+            Vector2 imagePos = globalData.imagePos;
+            int dx = (int)(imagePos.X - scaledX);
+            int dy = (int)(imagePos.Y - scaledY);
+            int distance = (int)Math.Sqrt(dx * dx + dy * dy);
+            int score = (int)Math.Round(1000.0 / (distance + 1));
+
+            overallScore += score;
+            Output.OutputText($"Distance: {distance}", outputLabel);
+            Output.OutputText($"new score: {overallScore}", outputLabel);
+            Output.OutputText($"added score: {score}", outputLabel);
         }
     }
 }

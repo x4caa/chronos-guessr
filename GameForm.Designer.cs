@@ -70,6 +70,7 @@
             this.GuessButton.TabIndex = 7;
             this.GuessButton.Text = "button1";
             this.GuessButton.UseVisualStyleBackColor = true;
+            this.GuessButton.Click += new System.EventHandler(this.GuessButton_Click);
             // 
             // GameForm
             // 

@@ -27,6 +27,14 @@ namespace chronosguessr
             playButton.Paint += playButton_Paint;
 
             this.FormClosed += Form1_FormClosed;
+
+            storeLog.logs = LogOrigSizes();
+
+        }
+
+        public static class storeLog
+        {
+            public static Log[] logs;
         }
 
         private void Form1_FormClosed(object? sender, FormClosedEventArgs e)
@@ -51,13 +59,11 @@ namespace chronosguessr
             if (!Directory.Exists("./images"))
             {
                 NotificationUtils.SpawnNotif("Downloading Images", 2000, screen.Width / 2 - TextRenderer.MeasureText("Downloading Images", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
-                Output.OutputText("DOWNLOADING IMAGES FROM GIT", outputLabel);
                 GitUtils.CloneRepository("https://github.com/x4caa/chronos-guessr-images/", "./images");
                 if (Directory.Exists("./images/.git"))
                 {
                     GitUtils.DeleteDirectory("./images/.git");
                 }
-                Output.OutputText("DONE DOWNLOADING IMAGES FROM GIT", outputLabel);
                 globalData.doneDownloading = true;
             }
             else globalData.doneDownloading = true;
@@ -95,7 +101,6 @@ namespace chronosguessr
             playButton.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
 
             playButton.Location = new Point(screen.Width / 2 - playButton.Width / 2, screen.Height / 2 - playButton.Height / 2 - screen.Height / 10);
-            Output.OutputText($"RESIZED BUTTON: {playButton.Size}", outputLabel);
         }
 
         private void playButton_Paint(object sender, PaintEventArgs e)
@@ -138,7 +143,6 @@ namespace chronosguessr
             {
                 SettingsOpen = true;
                 SettingsSpawned = true;
-                Output.OutputText("setting gear clicked", outputLabel);
                 Size screen = getScreenSize();
                 Panel SettingBack = new Panel();
                 SettingBack.Name = "SMenuBack";
@@ -204,7 +208,6 @@ namespace chronosguessr
                 SettingsOpen = false;
                 foreach (Control control in this.Controls)
                 {
-                    Output.OutputText($"{control.Name}", outputLabel);
                     if (control.Name.Contains("SMenu"))
                     {
                         control.Hide();
@@ -267,8 +270,11 @@ namespace chronosguessr
         }
         private async Task leaderboardLabelInitAsync()
         {
+
             leaderboardLabel.Hide();
             Size screen = getScreenSize();
+            leaderboardLabel.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 100.0), FontStyle.Regular);
+            leaderboardLabel.Size = new Size(screen.Width / 30, screen.Height / 8);
 
             leaderboardLabel.TextAlign = ContentAlignment.TopCenter;
             Task<string> leaderboard = GitUtils.GetFile("https://raw.githubusercontent.com/x4caa/chronos-guessr/master/leaderboard.txt");
@@ -280,14 +286,13 @@ namespace chronosguessr
                 $"3. {leaderboardLines[2]}\r\n" +
                 $"4. {leaderboardLines[3]}\r\n" +
                 $"5. {leaderboardLines[4]}";
-            leaderboardLabel.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 100.0), FontStyle.Regular);
+
             leaderboardLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
 
-            Size textSize = TextRenderer.MeasureText(leaderboardLabel.Text, leaderboardLabel.Font);
-            leaderboardLabel.Size = new Size(textSize.Width, textSize.Height);
+            //Size textSize = TextRenderer.MeasureText(leaderboardLabel.Text, leaderboardLabel.Font);
+            //leaderboardLabel.Size = new Size(textSize.Width, textSize.Height);
 
-            leaderboardLabel.Location = new Point(screen.Width - textSize.Width - screen.Width / 50, screen.Height / 2 - textSize.Height / 2);
-            Output.OutputText("RESIZED LEADERBOARD TEXT", outputLabel);
+            leaderboardLabel.Location = new Point(screen.Width - leaderboardLabel.Width - screen.Width / 50, screen.Height / 2 - leaderboardLabel.Height / 2);
             leaderboardLabel.Show();
         }
 
@@ -298,44 +303,75 @@ namespace chronosguessr
             outputLabel.Location = new Point(0, -15);
         }
 
-        class Log
+        public class Log
         {
             public string name { get; set; }
             public Size size { get; set; }
-            public Point? location { get; set; }
+            public Font? font { get; set; }
 
         }
         private Log[] LogOrigSizes()
         {
+            Log[] log = new Log[20];
+
             Log OutputLog = new Log();
             OutputLog.name = "Output"; OutputLog.size = outputLabel.Size;
+            log[0] = OutputLog;
 
-            Vector2 PlayButtonSize = new Vector2(playButton.Width, playButton.Height);
-            Vector2 PlayButtonLocation = new Vector2(playButton.Location.X, playButton.Location.Y);
+            Log PlayLog = new Log();
+            PlayLog.name = "Play"; PlayLog.size = playButton.Size; PlayLog.font = playButton.Font;
+            log[1] = PlayLog;
+
+            Log NameLabelLog = new Log();
+            NameLabelLog.name = "NameLabel"; NameLabelLog.size = nameLabel.Size; NameLabelLog.font = nameLabel.Font;
+            log[2] = NameLabelLog;
+
+            Log NameBoxLog = new Log();
+            NameBoxLog.name = "NameBox"; NameBoxLog.size = nameBox.Size; NameBoxLog.font = nameBox.Font;
+            log[3] = NameBoxLog;
+
+            Log LeaderboardLog = new Log();
+            LeaderboardLog.name = "Leaderboard"; LeaderboardLog.size = leaderboardLabel.Size; LeaderboardLog.font = leaderboardLabel.Font;
+            log[4] = LeaderboardLog;
+
+            return log;
         }
 
         private void ResizeUi(int scaleInt)
         {
             Size screen = getScreenSize();
             float scale;
-            if (scaleInt == 1)
+
+            switch (scaleInt)
             {
-                scale = 0.5f;
-            }
-            else if (scaleInt == 2)
-            {
-                scale = 1.0f;
-            }
-            else
-            {
-                scale = 1.5f;
+                case 1:
+                    scale = 0.5f;
+                    break;
+                case 2:
+                    scale = 1.0f;
+                    break;
+                default:
+                    scale = 1.5f;
+                    break;
             }
 
-            outputLabel.Size = new Size((int)(outputLabel.Width * scale), (int)(outputLabel.Height * scale));
+            outputLabel.Size = new Size((int)(storeLog.logs[0].size.Width * scale), (int)(storeLog.logs[0].size.Height * scale));
 
-            playButton.Size = new Size((int)(playButton.Width * scale), (int)(playButton.Height * scale));
+            playButton.Size = new Size((int)(storeLog.logs[1].size.Width * scale), (int)(storeLog.logs[1].size.Height * scale));
             playButton.Location = new Point(screen.Width / 2 - playButton.Width / 2, screen.Height / 2 - playButton.Height / 2 - screen.Height / 10);
+            playButton.Font = new Font(storeLog.logs[1].font.Name, storeLog.logs[1].font.Size * scale, FontStyle.Bold);
 
+            nameLabel.Font = new Font(storeLog.logs[2].font.Name, storeLog.logs[2].font.Size * scale, FontStyle.Bold);
+            nameLabel.Size = new Size((int)(storeLog.logs[2].size.Width * scale), (int)(storeLog.logs[2].size.Height * scale));
+            nameLabel.Location = new Point(screen.Width / 2 - nameLabel.Width / 2, playButton.Bottom + 5);
+
+            nameBox.Font = new Font(storeLog.logs[3].font.Name, storeLog.logs[3].font.Size * scale, FontStyle.Underline);
+            nameBox.Size = new Size((int)(storeLog.logs[3].size.Width * scale), (int)(storeLog.logs[3].size.Height * scale));
+            nameBox.Location = new Point(screen.Width / 2 - nameBox.Width / 2, nameLabel.Bottom + 2);
+
+            leaderboardLabel.Font = new Font(storeLog.logs[4].font.Name, storeLog.logs[4].font.Size * scale, FontStyle.Bold);
+            leaderboardLabel.Size = new Size((int)(storeLog.logs[4].size.Width * scale), (int)(storeLog.logs[4].size.Height * scale));
+            leaderboardLabel.Location = new Point(screen.Width - leaderboardLabel.Width - screen.Width / 50, screen.Height / 2 - leaderboardLabel.Height / 2);
         }
         public static Size getScreenSize()
         {

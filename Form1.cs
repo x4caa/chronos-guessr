@@ -178,6 +178,7 @@ namespace chronosguessr
                 SettingScaleBar.Value = 2;
                 SettingScaleBar.Size = new Size(SettingBack.Width - SettingScale.Width - 2, SettingScale.Height);
                 SettingScaleBar.Location = new Point(SettingScale.Right, SettingScale.Location.Y);
+                SettingScaleBar.ValueChanged += SettingScaleBar_ValueChanged;
 
                 this.Controls.Add(SettingBack);
                 this.Controls.Add(SettingLabel);
@@ -211,6 +212,12 @@ namespace chronosguessr
                 }
             }
 
+        }
+
+        private void SettingScaleBar_ValueChanged(object? sender, EventArgs e)
+        {
+            TrackBar bar = (TrackBar)sender;
+            ResizeUi(bar.Value);
         }
 
         private void SettingBack_Paint(object? sender, PaintEventArgs e)
@@ -291,6 +298,45 @@ namespace chronosguessr
             outputLabel.Location = new Point(0, -15);
         }
 
+        class Log
+        {
+            public string name { get; set; }
+            public Size size { get; set; }
+            public Point? location { get; set; }
+
+        }
+        private Log[] LogOrigSizes()
+        {
+            Log OutputLog = new Log();
+            OutputLog.name = "Output"; OutputLog.size = outputLabel.Size;
+
+            Vector2 PlayButtonSize = new Vector2(playButton.Width, playButton.Height);
+            Vector2 PlayButtonLocation = new Vector2(playButton.Location.X, playButton.Location.Y);
+        }
+
+        private void ResizeUi(int scaleInt)
+        {
+            Size screen = getScreenSize();
+            float scale;
+            if (scaleInt == 1)
+            {
+                scale = 0.5f;
+            }
+            else if (scaleInt == 2)
+            {
+                scale = 1.0f;
+            }
+            else
+            {
+                scale = 1.5f;
+            }
+
+            outputLabel.Size = new Size((int)(outputLabel.Width * scale), (int)(outputLabel.Height * scale));
+
+            playButton.Size = new Size((int)(playButton.Width * scale), (int)(playButton.Height * scale));
+            playButton.Location = new Point(screen.Width / 2 - playButton.Width / 2, screen.Height / 2 - playButton.Height / 2 - screen.Height / 10);
+
+        }
         public static Size getScreenSize()
         {
             Screen mainScreen = Screen.PrimaryScreen;

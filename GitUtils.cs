@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using LibGit2Sharp;
+using System.Diagnostics;
 
 namespace chronosguessr
 {
@@ -29,6 +30,41 @@ namespace chronosguessr
             string text = await textTask;
             string[] lines = text.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             return lines;
+        }
+
+        public static void CloneRepository(string repoUrl, string localPath)
+        {
+            try
+            {
+                CloneOptions options = new CloneOptions();
+                //options.IsBare = true;
+
+                Repository.Clone(repoUrl, localPath, options);
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        public static void DeleteDirectory(string target_dir)
+        {
+            string[] files = Directory.GetFiles(target_dir);
+            string[] dirs = Directory.GetDirectories(target_dir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(target_dir, false);
         }
     }
 }

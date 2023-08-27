@@ -4,6 +4,9 @@
     {
         public static void SpawnNotif(string message, int duration, int x, int y, Form form, Label output)
         {
+
+            if (globalData.notifPlaying) return;
+
             Label notificationLabel = new Label();
             notificationLabel.Text = message;
             notificationLabel.Font = new Font("Minecraft Ten", Form1.getScreenSize().Width / 100, FontStyle.Regular);

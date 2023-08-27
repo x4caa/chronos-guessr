@@ -45,17 +45,35 @@ namespace chronosguessr
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Size screen = getScreenSize();
 
+            if (!Directory.Exists("./images"))
+            {
+                NotificationUtils.SpawnNotif("Downloading Images", 2000, screen.Width / 2 - TextRenderer.MeasureText("Downloading Images", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
+                Output.OutputText("DOWNLOADING IMAGES FROM GIT", outputLabel);
+                GitUtils.CloneRepository("https://github.com/x4caa/chronos-guessr-images/", "./images");
+                if (Directory.Exists("./images/.git"))
+                {
+                    GitUtils.DeleteDirectory("./images/.git");
+                }
+                Output.OutputText("DONE DOWNLOADING IMAGES FROM GIT", outputLabel);
+                globalData.doneDownloading = true;
+            }
+            else globalData.doneDownloading = true;
         }
 
         private void playButton_Click(object sender, EventArgs e)
         {
             Size screen = getScreenSize();
-            if (nameBox.Text.Length <= 0 && !globalData.notifPlaying)
+            if (nameBox.Text.Length <= 0)
             {
                 NotificationUtils.SpawnNotif("Please Add a Name", 1000, screen.Width / 2 - TextRenderer.MeasureText("Please Add a Name", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
             }
-            else if (nameBox.Text.Length <= 16 && !globalData.notifPlaying)
+            else if (nameBox.Text.Length <= 3)
+            {
+                NotificationUtils.SpawnNotif("Name Must Be Longer Than 3 Characters", 1000, screen.Width / 2 - TextRenderer.MeasureText("Name Must Be Longer Than 3 Characters", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
+            }
+            else if (nameBox.Text.Length <= 16 && nameBox.Text.Length > 0 && globalData.doneDownloading)
             {
                 Form gameform = new GameForm();
                 gameform.Show();
@@ -204,5 +222,6 @@ namespace chronosguessr
     {
         public static Size previousSize;
         public static bool notifPlaying;
+        public static bool doneDownloading = false;
     }
 }

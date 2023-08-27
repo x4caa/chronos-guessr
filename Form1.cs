@@ -13,7 +13,6 @@ namespace chronosguessr
             //set fullscreen
             this.Size = getScreenSize();
             this.Text = "Chronos Guessr";
-            globalData.previousSize = this.Size;
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
@@ -119,6 +118,7 @@ namespace chronosguessr
         }
 
         private bool SettingsOpen = false;
+        private bool SettingsSpawned = false;
         private void SettingsGearInit()
         {
             Size screen = getScreenSize();
@@ -134,21 +134,69 @@ namespace chronosguessr
 
         private void SettingsGear_Click(object? sender, EventArgs e)
         {
-            if (!SettingsOpen)
+            if (!SettingsOpen && !SettingsSpawned)
             {
                 SettingsOpen = true;
+                SettingsSpawned = true;
                 Output.OutputText("setting gear clicked", outputLabel);
                 Size screen = getScreenSize();
                 Panel SettingBack = new Panel();
                 SettingBack.Name = "SMenuBack";
                 SettingBack.BorderStyle = BorderStyle.None;
-                SettingBack.BackColor = ColorTranslator.FromHtml("#007FE0");
+                SettingBack.BackColor = ColorTranslator.FromHtml("#102638");
                 SettingBack.Size = new Size(screen.Width / 6, screen.Height / 4);
                 SettingBack.Location = new Point(screen.Width - SettingBack.Width - 5, SettingsGear.Bottom + 5);
                 SettingBack.Paint += SettingBack_Paint;
 
+                Label SettingLabel = new Label();
+                SettingLabel.Name = "SMenuLabel";
+                SettingLabel.BorderStyle = BorderStyle.None;
+                SettingLabel.BackColor = SettingBack.BackColor;
+                SettingLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+                SettingLabel.Text = "SETTINGS";
+                SettingLabel.Font = new Font("Minecraft Ten", screen.Width / 100, FontStyle.Bold);
+                Size SettingLabelSize = TextRenderer.MeasureText(SettingLabel.Text, SettingLabel.Font);
+                SettingLabel.Size = SettingLabelSize;
+                SettingLabel.Location = new Point(screen.Width - SettingBack.Width / 2 - SettingLabel.Width / 2 - 5, SettingBack.Top + 2);
+
+                Label SettingScale = new Label();
+                SettingScale.Name = "SMenuScale";
+                SettingScale.BorderStyle = BorderStyle.None;
+                SettingScale.BackColor = SettingBack.BackColor;
+                SettingScale.ForeColor = SettingLabel.ForeColor;
+                SettingScale.Text = "UI Scale";
+                SettingScale.Font = new Font("Mojangles", screen.Width / 125, FontStyle.Regular);
+                Size ScaleLabelSize = TextRenderer.MeasureText(SettingScale.Text, SettingScale.Font);
+                SettingScale.Size = ScaleLabelSize;
+                SettingScale.Location = new Point(SettingBack.Left + 2, SettingLabel.Bottom + 2);
+
+                TrackBar SettingScaleBar = new TrackBar();
+                SettingScaleBar.Name = "SMenuScaleBar";
+                SettingScaleBar.BackColor = SettingBack.BackColor;
+                SettingScaleBar.Maximum = 3;
+                SettingScaleBar.Minimum = 1;
+                SettingScaleBar.Value = 2;
+                SettingScaleBar.Size = new Size(SettingBack.Width - SettingScale.Width - 2, SettingScale.Height);
+                SettingScaleBar.Location = new Point(SettingScale.Right, SettingScale.Location.Y);
 
                 this.Controls.Add(SettingBack);
+                this.Controls.Add(SettingLabel);
+                this.Controls.Add(SettingScale);
+                this.Controls.Add(SettingScaleBar);
+                SettingLabel.BringToFront();
+                SettingScale.BringToFront();
+                SettingScaleBar.BringToFront();
+            }
+            else if (!SettingsOpen && SettingsSpawned)
+            {
+                SettingsOpen = true;
+                foreach (Control control in this.Controls)
+                {
+                    if (control.Name.Contains("SMenu"))
+                    {
+                        control.Show();
+                    }
+                }
             }
             else
             {
@@ -247,7 +295,7 @@ namespace chronosguessr
         {
             Screen mainScreen = Screen.PrimaryScreen;
             return new Size(mainScreen.Bounds.Width, mainScreen.Bounds.Height);
-            //return new Size(1000, 1000);
+            //return new Size(1280, 720);
         }
     }
 
@@ -297,5 +345,6 @@ namespace chronosguessr
         public static Panel currPin;
         public static Vector2 imagePos;
         public static Vector2 currGuess;
+        public static int UiScale;
     }
 }

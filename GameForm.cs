@@ -25,6 +25,9 @@ namespace chronosguessr
 
             MapInit();
             GuessButtonInit();
+            PositionLabelInit();
+
+            RoundUiInit();
             this.FormClosed += GameForm_FormClosed;
             Map.MouseClick += Map_MouseClick;
 
@@ -44,7 +47,8 @@ namespace chronosguessr
                 Output.OutputText($"CLICKED AT: {scaledX - 512}, {scaledY - 512}", outputLabel);
                 globalData.currGuess = new Vector2(scaledX - 512, scaledY - 512);
                 SpawnPin(new Vector2(Map.Location.X + relativeClickPoint.X, Map.Location.Y + relativeClickPoint.Y));
-
+                PositionLabel.Text = $"{scaledX - 512}, {scaledY - 512}";
+                PositionLabel.Location = new Point(Map.Left + (Map.Width / 2) - (PositionLabel.Width / 2), Map.Top - PositionLabel.Height - 5);
             }
         }
 
@@ -71,10 +75,12 @@ namespace chronosguessr
         private void MapInit()
         {
             Size screen = getScreenSize();
-            Map.Size = new Size(screen.Width / 4, screen.Width / 4);
+
+            Size buttonSize = new Size(0, (int)(screen.Height / 20 * globalData.UiScale));
+            Map.Size = new Size((int)(screen.Width / 4 * globalData.UiScale), (int)(screen.Width / 4 * globalData.UiScale));
             Map.Image = Properties.Resources.ChronosMapAlpha;
             Map.BorderStyle = BorderStyle.None;
-            Map.Location = new Point(screen.Width - Map.Width - 10, screen.Height - Map.Height - screen.Height / 8);
+            Map.Location = new Point(screen.Width - Map.Width - 10, (int)(screen.Height - Map.Height - GetTaskbarSize() - (buttonSize.Height * 1.5) - (screen.Height / 108)));
 
             Map.MouseEnter += Map_MouseEnter;
             Map.MouseLeave += Map_MouseLeave;
@@ -94,8 +100,8 @@ namespace chronosguessr
         {
             Size screen = getScreenSize();
             GuessButton.Text = "Guess";
-            GuessButton.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 100.0), FontStyle.Regular);
-            GuessButton.Size = new Size(Map.Width, screen.Height / 20);
+            GuessButton.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 100.0) * globalData.UiScale, FontStyle.Regular);
+            GuessButton.Size = new Size(Map.Width, (int)(screen.Height / 20 * globalData.UiScale));
             GuessButton.FlatStyle = FlatStyle.Flat;
             GuessButton.FlatAppearance.BorderSize = 0;
             GuessButton.BackColor = Color.FromArgb(100, ColorTranslator.FromHtml("#007FE0"));
@@ -126,17 +132,73 @@ namespace chronosguessr
             }
         }
 
+        private void RoundUiInit()
+        {
+            Size screen = getScreenSize();
+
+            Panel RoundRight = new Panel();
+            RoundRight.BackColor = Color.FromArgb(100, Color.Black);
+            RoundRight.BorderStyle = BorderStyle.None;
+            RoundRight.Size = new Size(screen.Width / 120, screen.Height / 60);
+            RoundRight.Location = new Point(screen.Width - RoundRight.Width - 5, RoundRight.Height / 2 + 5);
+
+            Panel RoundCentre = new Panel();
+            RoundCentre.BackColor = Color.FromArgb(100, Color.Black);
+            RoundCentre.BorderStyle = BorderStyle.None;
+            RoundCentre.Size = new Size(screen.Width / 15, screen.Height / 30);
+            RoundCentre.Location = new Point(RoundRight.Left - RoundCentre.Width, 0 + 5);
+
+            Panel RoundLeft = new Panel();
+            RoundLeft.BackColor = Color.FromArgb(100, Color.Black);
+            RoundLeft.BorderStyle = BorderStyle.None;
+            RoundLeft.Size = RoundRight.Size;
+            RoundLeft.Location = new Point(RoundCentre.Left - RoundLeft.Width, RoundLeft.Height / 2 + 5);
+
+            Label RoundCount = new Label();
+            RoundCount.BackColor = Color.FromArgb(100, Color.Black);
+            RoundCount.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            RoundCount.BorderStyle = BorderStyle.None;
+            RoundCount.Text = $"{currentPlay}/{maxRounds}";
+            RoundCount.Font = new Font("Minecraft Ten", getScreenSize().Height / 50, FontStyle.Regular);
+            RoundCount.Location = new Point(RoundCentre.Location.X + (RoundCentre.Width / 2) - (RoundCount.Width / 2), RoundCentre.Location.Y + (RoundCentre.Height / 2) - (RoundCount.Height / 2));
+
+            this.Controls.Add(RoundCentre);
+            this.Controls.Add(RoundRight);
+            this.Controls.Add(RoundLeft);
+            this.Controls.Add(RoundCount);
+        }
         private void OutputBoxInit()
         {
             Size screen = getScreenSize();
             outputLabel.Size = new Size(screen.Width / 4, screen.Height);
             outputLabel.Location = new Point(0, -15);
         }
+        private void PositionLabelInit()
+        {
+            PositionLabel.TextAlign = ContentAlignment.MiddleCenter;
+            PositionLabel.Text = "0, 0";
+            PositionLabel.Font = new Font("Minecraft Ten", getScreenSize().Height / 50, FontStyle.Regular);
+            PositionLabel.BackColor = Color.Transparent;
+            PositionLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            PositionLabel.Size = new Size(Map.Width, TextRenderer.MeasureText(PositionLabel.Text, PositionLabel.Font).Height);
+            PositionLabel.Location = new Point(Map.Left + (Map.Width / 2) - (PositionLabel.Width / 2), Map.Top - PositionLabel.Height - 5);
+        }
         public static Size getScreenSize()
         {
             Screen mainScreen = Screen.PrimaryScreen;
+            //return Screen.PrimaryScreen.WorkingArea.Size;
             return new Size(mainScreen.Bounds.Width, mainScreen.Bounds.Height);
             //return new Size(1000, 1000);
+        }
+
+        public static int GetTaskbarSize()
+        {
+            int height = Screen.PrimaryScreen.Bounds.Height;
+            int width = Screen.PrimaryScreen.Bounds.Width;
+            int workingAreaHeight = Screen.PrimaryScreen.WorkingArea.Height;
+            int workingAreaWidth = Screen.PrimaryScreen.WorkingArea.Width;
+
+            return height - workingAreaHeight;
         }
         private Vector2 GetImageLocation(string filePath)
         {
@@ -182,10 +244,13 @@ namespace chronosguessr
             currentPlay += 1;
 
             previousSelections.Add(randomIndex);
+            PositionLabel.Text = "0, 0";
+            PositionLabel.Location = new Point(Map.Left + (Map.Width / 2) - (PositionLabel.Width / 2), Map.Top - PositionLabel.Height - 5);
         }
         private void PinInit()
         {
             Panel pin = globalData.currPin;
+            pin.Cursor = Cursors.Hand;
             pin.MouseEnter += Pin_MouseEnter;
         }
 
@@ -226,6 +291,9 @@ namespace chronosguessr
             if (globalData.currPin != null)
             {
                 CalcPoints(new Point(globalData.currPin.Location.X - Map.Location.X, globalData.currPin.Location.Y - Map.Location.Y));
+                this.Controls.Remove(globalData.currPin);
+                globalData.currPin = null;
+                SetNewImage();
             }
         }
 
@@ -243,6 +311,11 @@ namespace chronosguessr
             Output.OutputText($"Distance: {distance}", outputLabel);
             Output.OutputText($"new score: {overallScore}", outputLabel);
             Output.OutputText($"added score: {score}", outputLabel);
+        }
+
+        private void PositionLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

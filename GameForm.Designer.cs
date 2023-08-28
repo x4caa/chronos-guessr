@@ -32,6 +32,7 @@
             this.outputLabel = new System.Windows.Forms.Label();
             this.Map = new System.Windows.Forms.PictureBox();
             this.GuessButton = new System.Windows.Forms.Button();
+            this.PositionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Map)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,11 +73,22 @@
             this.GuessButton.UseVisualStyleBackColor = true;
             this.GuessButton.Click += new System.EventHandler(this.GuessButton_Click);
             // 
+            // PositionLabel
+            // 
+            this.PositionLabel.AutoSize = true;
+            this.PositionLabel.Location = new System.Drawing.Point(588, 176);
+            this.PositionLabel.Name = "PositionLabel";
+            this.PositionLabel.Size = new System.Drawing.Size(38, 15);
+            this.PositionLabel.TabIndex = 8;
+            this.PositionLabel.Text = "label1";
+            this.PositionLabel.Click += new System.EventHandler(this.PositionLabel_Click);
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.PositionLabel);
             this.Controls.Add(this.GuessButton);
             this.Controls.Add(this.Map);
             this.Controls.Add(this.outputLabel);
@@ -95,5 +107,6 @@
         private Label outputLabel;
         private PictureBox Map;
         private Button GuessButton;
+        private Label PositionLabel;
     }
 }

@@ -93,6 +93,16 @@ namespace chronosguessr.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap RoundUi {
+            get {
+                object obj = ResourceManager.GetObject("RoundUi", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SettingsGear {
             get {
                 object obj = ResourceManager.GetObject("SettingsGear", resourceCulture);

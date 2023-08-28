@@ -340,20 +340,21 @@ namespace chronosguessr
         private void ResizeUi(int scaleInt)
         {
             Size screen = getScreenSize();
-            float scale;
 
             switch (scaleInt)
             {
                 case 1:
-                    scale = 0.5f;
+                    globalData.UiScale = 0.75f;
                     break;
                 case 2:
-                    scale = 1.0f;
+                    globalData.UiScale = 1.0f;
                     break;
                 default:
-                    scale = 1.5f;
+                    globalData.UiScale = 1.25f;
                     break;
             }
+
+            float scale = globalData.UiScale;
 
             outputLabel.Size = new Size((int)(storeLog.logs[0].size.Width * scale), (int)(storeLog.logs[0].size.Height * scale));
 
@@ -375,9 +376,7 @@ namespace chronosguessr
         }
         public static Size getScreenSize()
         {
-            Screen mainScreen = Screen.PrimaryScreen;
-            return new Size(mainScreen.Bounds.Width, mainScreen.Bounds.Height);
-            //return new Size(1280, 720);
+            return Screen.PrimaryScreen.Bounds.Size;
         }
     }
 
@@ -427,6 +426,6 @@ namespace chronosguessr
         public static Panel currPin;
         public static Vector2 imagePos;
         public static Vector2 currGuess;
-        public static int UiScale;
+        public static float UiScale = 1.0f;
     }
 }

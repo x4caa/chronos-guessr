@@ -1,5 +1,4 @@
-﻿using System.Drawing.Drawing2D;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace chronosguessr
@@ -41,7 +40,7 @@ namespace chronosguessr
 
             // check if click is inside picture
             if (relativeClickPoint.X >= 0 && relativeClickPoint.X < Map.Width &&
-                relativeClickPoint.Y >= 0 && relativeClickPoint.Y < Map.Height)
+                relativeClickPoint.Y >= 0 && relativeClickPoint.Y < Map.Height && !gameEnded)
             {
                 int scaledX = (int)((float)relativeClickPoint.X / Map.Width * 1024);
                 int scaledY = (int)((float)relativeClickPoint.Y / Map.Height * 1024);
@@ -105,8 +104,8 @@ namespace chronosguessr
             GuessButton.Size = new Size(Map.Width, (int)(screen.Height / 20 * globalData.UiScale));
             GuessButton.FlatStyle = FlatStyle.Flat;
             GuessButton.FlatAppearance.BorderSize = 0;
-            GuessButton.BackColor = Color.FromArgb(100, ColorTranslator.FromHtml("#007FE0"));
-            GuessButton.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            GuessButton.BackColor = Color.FromArgb(100, Palette.BackLight);
+            GuessButton.ForeColor = Palette.Text;
             GuessButton.FlatAppearance.MouseOverBackColor = GuessButton.BackColor;
             GuessButton.FlatAppearance.CheckedBackColor = GuessButton.BackColor;
             GuessButton.Location = new Point(Map.Left, Map.Bottom + 5);
@@ -116,21 +115,7 @@ namespace chronosguessr
 
         private void GuessButton_Paint(object? sender, PaintEventArgs e)
         {
-            Button button = (Button)sender;
-            int borderRadius = 10;
-
-            Rectangle bounds = new Rectangle(0, 0, button.Width, button.Height);
-
-            using (GraphicsPath path = new GraphicsPath())
-            {
-                path.AddArc(bounds.Left, bounds.Top, borderRadius * 2, borderRadius * 2, 180, 90);
-                path.AddArc(bounds.Right - borderRadius * 2, bounds.Top, borderRadius * 2, borderRadius * 2, 270, 90);
-                path.AddArc(bounds.Right - borderRadius * 2, bounds.Bottom - borderRadius * 2, borderRadius * 2, borderRadius * 2, 0, 90);
-                path.AddArc(bounds.Left, bounds.Bottom - borderRadius * 2, borderRadius * 2, borderRadius * 2, 90, 90);
-                path.CloseFigure();
-
-                button.Region = new Region(path);
-            }
+            RoundObject.Round(sender);
         }
 
         private Panel RoundRight;
@@ -167,7 +152,7 @@ namespace chronosguessr
 
             RoundCount = new Label();
             RoundCount.BackColor = Color.FromArgb(100, Color.Black);
-            RoundCount.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            RoundCount.ForeColor = Palette.Text;
             RoundCount.BorderStyle = BorderStyle.None;
             RoundCount.Text = $"Round {currentPlay}/{maxRounds}";
             RoundCount.Font = new Font("Minecraft Ten", getScreenSize().Height / 75, FontStyle.Regular);
@@ -206,7 +191,7 @@ namespace chronosguessr
 
             ScoreCount = new Label();
             ScoreCount.BackColor = Color.FromArgb(100, Color.Black);
-            ScoreCount.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            ScoreCount.ForeColor = Palette.Text;
             ScoreCount.Font = new Font("Minecraft Ten", getScreenSize().Height / 75, FontStyle.Regular);
             ScoreCount.TextAlign = ContentAlignment.MiddleCenter;
             ScoreCount.Text = $"{globalData.score} Points";
@@ -232,7 +217,7 @@ namespace chronosguessr
             PositionLabel.Text = "0, 0";
             PositionLabel.Font = new Font("Minecraft Ten", getScreenSize().Height / 50, FontStyle.Regular);
             PositionLabel.BackColor = Color.Transparent;
-            PositionLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            PositionLabel.ForeColor = Palette.Text;
             PositionLabel.Size = new Size(Map.Width, TextRenderer.MeasureText(PositionLabel.Text, PositionLabel.Font).Height);
             PositionLabel.Location = new Point(Map.Left + (Map.Width / 2) - (PositionLabel.Width / 2), Map.Top - PositionLabel.Height - 5);
         }
@@ -294,13 +279,6 @@ namespace chronosguessr
             Output.OutputText($"Loaded image: {images[randomIndex]}", outputLabel);
             Output.OutputText($"Image location: {GetImageLocation(images[randomIndex])}", outputLabel);
             globalData.imagePos = GetImageLocation(images[randomIndex]);
-            if (currentPlay > maxRounds)
-            {
-                EndGame();
-            }
-            currentPlay += 1;
-            UpdateUi();
-
 
 
             previousSelections.Add(randomIndex);
@@ -308,23 +286,56 @@ namespace chronosguessr
             PositionLabel.Location = new Point(Map.Left + (Map.Width / 2) - (PositionLabel.Width / 2), Map.Top - PositionLabel.Height - 5);
         }
         private bool gameEnded = false;
+        private Label PointsLabel;
+        private Button PlayAgainButton;
         private void EndGame()
         {
             gameEnded = true;
 
             Size screen = getScreenSize();
-            Label PointsLabel = new Label();
+            PointsLabel = new Label();
             PointsLabel.Text = $"{globalData.score} Points!";
             PointsLabel.Font = new Font("Minecraft Ten", screen.Width / 38.4f, FontStyle.Bold);
             PointsLabel.BackColor = Color.Transparent;
-            PointsLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            PointsLabel.ForeColor = Palette.Text;
             Size textSize = TextRenderer.MeasureText(PointsLabel.Text, PointsLabel.Font);
             PointsLabel.Size = textSize;
             PointsLabel.Location = new Point(screen.Width / 2 - textSize.Width / 2, screen.Height / 2 - textSize.Height);
 
-            Button PlayAgainButton = new Button();
-            //PlayAgainButton
+            PlayAgainButton = new Button();
+            PlayAgainButton.Text = "Play Again";
+            PlayAgainButton.Font = new Font("Minecraft Ten", screen.Width / 50, FontStyle.Bold);
+            PlayAgainButton.BackColor = Palette.BackLight;
+            PlayAgainButton.ForeColor = Palette.Text;
+            PlayAgainButton.FlatAppearance.BorderSize = 0;
+            PlayAgainButton.FlatStyle = FlatStyle.Flat;
+            PlayAgainButton.Size = new Size(screen.Width / 5, screen.Height / 8);
+            PlayAgainButton.Location = new Point(screen.Width / 2 - PlayAgainButton.Width / 2, screen.Height / 2);
+
+            PlayAgainButton.Paint += PlayAgainButton_Paint;
+            PlayAgainButton.Click += PlayAgainButton_Click;
+
+            this.Controls.Add(PlayAgainButton);
+            this.Controls.Add(PointsLabel);
         }
+
+        private void PlayAgainButton_Click(object? sender, EventArgs e)
+        {
+            currentPlay = 0;
+            globalData.score = 0;
+            overallScore = 0;
+            UpdateUi();
+            gameEnded = false;
+            this.Controls.Remove(PlayAgainButton);
+            this.Controls.Remove(PointsLabel);
+            SetNewImage();
+        }
+
+        private void PlayAgainButton_Paint(object? sender, PaintEventArgs e)
+        {
+            RoundObject.Round(sender);
+        }
+
         private void UpdateUi()
         {
             RoundCount.Text = $"Round {currentPlay}/{maxRounds}";
@@ -376,7 +387,16 @@ namespace chronosguessr
                 CalcPoints(new Point(globalData.currPin.Location.X - Map.Location.X, globalData.currPin.Location.Y - Map.Location.Y));
                 this.Controls.Remove(globalData.currPin);
                 globalData.currPin = null;
-                SetNewImage();
+                UpdateUi();
+                currentPlay += 1;
+                if (currentPlay > maxRounds)
+                {
+                    EndGame();
+                }
+                else
+                {
+                    SetNewImage();
+                }
             }
         }
 
@@ -388,7 +408,15 @@ namespace chronosguessr
             int dx = (int)(imagePos.X - globalData.currGuess.X);
             int dy = (int)(imagePos.Y - globalData.currGuess.Y);
             double distance = Math.Sqrt(dx * dx + dy * dy);
-            int score = (int)Math.Max(500 - distance, 0);
+            int score;
+            if (distance >= 5)
+            {
+                score = 500;
+            }
+            else
+            {
+                score = (int)Math.Max(500 - distance, 0);
+            }
 
             overallScore += score;
             globalData.score = overallScore;

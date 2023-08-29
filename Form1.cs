@@ -18,7 +18,6 @@ namespace chronosguessr
 
             // init
             PlayButtonInit();
-            _ = leaderboardLabelInitAsync();
             OutputBoxInit();
             NameLabelInit();
             NameBoxInit();
@@ -268,33 +267,6 @@ namespace chronosguessr
             nameBox.TextAlign = HorizontalAlignment.Center;
             nameBox.Location = new Point(screen.Width / 2 - nameBox.Width / 2, nameLabel.Bottom + 2);
         }
-        private async Task leaderboardLabelInitAsync()
-        {
-
-            leaderboardLabel.Hide();
-            Size screen = getScreenSize();
-            leaderboardLabel.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 100.0), FontStyle.Regular);
-            leaderboardLabel.Size = new Size(screen.Width / 30, screen.Height / 8);
-
-            leaderboardLabel.TextAlign = ContentAlignment.TopCenter;
-            Task<string> leaderboard = GitUtils.GetFile("https://raw.githubusercontent.com/x4caa/chronos-guessr/master/leaderboard.txt");
-            string[] leaderboardLines = await GitUtils.GetLines(leaderboard);
-            leaderboardLabel.Text =
-                "Leaderboard\r\n" +
-                $"1. {leaderboardLines[0]}\r\n" +
-                $"2. {leaderboardLines[1]}\r\n" +
-                $"3. {leaderboardLines[2]}\r\n" +
-                $"4. {leaderboardLines[3]}\r\n" +
-                $"5. {leaderboardLines[4]}";
-
-            leaderboardLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
-
-            //Size textSize = TextRenderer.MeasureText(leaderboardLabel.Text, leaderboardLabel.Font);
-            //leaderboardLabel.Size = new Size(textSize.Width, textSize.Height);
-
-            leaderboardLabel.Location = new Point(screen.Width - leaderboardLabel.Width - screen.Width / 50, screen.Height / 2 - leaderboardLabel.Height / 2);
-            leaderboardLabel.Show();
-        }
 
         private void OutputBoxInit()
         {
@@ -329,10 +301,6 @@ namespace chronosguessr
             Log NameBoxLog = new Log();
             NameBoxLog.name = "NameBox"; NameBoxLog.size = nameBox.Size; NameBoxLog.font = nameBox.Font;
             log[3] = NameBoxLog;
-
-            Log LeaderboardLog = new Log();
-            LeaderboardLog.name = "Leaderboard"; LeaderboardLog.size = leaderboardLabel.Size; LeaderboardLog.font = leaderboardLabel.Font;
-            log[4] = LeaderboardLog;
 
             return log;
         }
@@ -369,10 +337,6 @@ namespace chronosguessr
             nameBox.Font = new Font(storeLog.logs[3].font.Name, storeLog.logs[3].font.Size * scale, FontStyle.Underline);
             nameBox.Size = new Size((int)(storeLog.logs[3].size.Width * scale), (int)(storeLog.logs[3].size.Height * scale));
             nameBox.Location = new Point(screen.Width / 2 - nameBox.Width / 2, nameLabel.Bottom + 2);
-
-            leaderboardLabel.Font = new Font(storeLog.logs[4].font.Name, storeLog.logs[4].font.Size * scale, FontStyle.Bold);
-            leaderboardLabel.Size = new Size((int)(storeLog.logs[4].size.Width * scale), (int)(storeLog.logs[4].size.Height * scale));
-            leaderboardLabel.Location = new Point(screen.Width - leaderboardLabel.Width - screen.Width / 50, screen.Height / 2 - leaderboardLabel.Height / 2);
         }
         public static Size getScreenSize()
         {
@@ -427,5 +391,6 @@ namespace chronosguessr
         public static Vector2 imagePos;
         public static Vector2 currGuess;
         public static float UiScale = 1.0f;
+        public static int score = 0;
     }
 }

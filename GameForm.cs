@@ -28,6 +28,7 @@ namespace chronosguessr
             PositionLabelInit();
 
             RoundUiInit();
+            ScoreUiInit();
             this.FormClosed += GameForm_FormClosed;
             Map.MouseClick += Map_MouseClick;
 
@@ -132,40 +133,92 @@ namespace chronosguessr
             }
         }
 
+        private Panel RoundRight;
+        private Panel RoundCentre;
+        private Panel RoundLeft;
+        private Label RoundCount;
+
+        private Panel ScoreRight;
+        private Panel ScoreCentre;
+        private Panel ScoreLeft;
+        private Label ScoreCount;
+
         private void RoundUiInit()
         {
             Size screen = getScreenSize();
 
-            Panel RoundRight = new Panel();
+            RoundRight = new Panel();
             RoundRight.BackColor = Color.FromArgb(100, Color.Black);
             RoundRight.BorderStyle = BorderStyle.None;
             RoundRight.Size = new Size(screen.Width / 120, screen.Height / 60);
             RoundRight.Location = new Point(screen.Width - RoundRight.Width - 5, RoundRight.Height / 2 + 5);
 
-            Panel RoundCentre = new Panel();
+            RoundCentre = new Panel();
             RoundCentre.BackColor = Color.FromArgb(100, Color.Black);
             RoundCentre.BorderStyle = BorderStyle.None;
             RoundCentre.Size = new Size(screen.Width / 15, screen.Height / 30);
             RoundCentre.Location = new Point(RoundRight.Left - RoundCentre.Width, 0 + 5);
 
-            Panel RoundLeft = new Panel();
+            RoundLeft = new Panel();
             RoundLeft.BackColor = Color.FromArgb(100, Color.Black);
             RoundLeft.BorderStyle = BorderStyle.None;
             RoundLeft.Size = RoundRight.Size;
             RoundLeft.Location = new Point(RoundCentre.Left - RoundLeft.Width, RoundLeft.Height / 2 + 5);
 
-            Label RoundCount = new Label();
+            RoundCount = new Label();
             RoundCount.BackColor = Color.FromArgb(100, Color.Black);
             RoundCount.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
             RoundCount.BorderStyle = BorderStyle.None;
-            RoundCount.Text = $"{currentPlay}/{maxRounds}";
-            RoundCount.Font = new Font("Minecraft Ten", getScreenSize().Height / 50, FontStyle.Regular);
+            RoundCount.Text = $"Round {currentPlay}/{maxRounds}";
+            RoundCount.Font = new Font("Minecraft Ten", getScreenSize().Height / 75, FontStyle.Regular);
+            RoundCount.Size = RoundCentre.Size;
+            RoundCount.TextAlign = ContentAlignment.MiddleCenter;
             RoundCount.Location = new Point(RoundCentre.Location.X + (RoundCentre.Width / 2) - (RoundCount.Width / 2), RoundCentre.Location.Y + (RoundCentre.Height / 2) - (RoundCount.Height / 2));
 
             this.Controls.Add(RoundCentre);
             this.Controls.Add(RoundRight);
             this.Controls.Add(RoundLeft);
             this.Controls.Add(RoundCount);
+            RoundCount.BringToFront();
+        }
+
+        private void ScoreUiInit()
+        {
+            Size screen = getScreenSize();
+
+            ScoreRight = new Panel();
+            ScoreRight.BackColor = Color.FromArgb(100, Color.Black);
+            ScoreRight.BorderStyle = BorderStyle.None;
+            ScoreRight.Size = RoundRight.Size;
+            ScoreRight.Location = new Point(RoundLeft.Left - ScoreRight.Width - 10, RoundRight.Location.Y);
+
+            ScoreCentre = new Panel();
+            ScoreCentre.BackColor = Color.FromArgb(100, Color.Black);
+            ScoreCentre.BorderStyle = BorderStyle.None;
+            ScoreCentre.Size = RoundCentre.Size;
+            ScoreCentre.Location = new Point(ScoreRight.Left - ScoreCentre.Width, RoundCentre.Location.Y);
+
+            ScoreLeft = new Panel();
+            ScoreLeft.BackColor = Color.FromArgb(100, Color.Black);
+            ScoreLeft.BorderStyle = BorderStyle.None;
+            ScoreLeft.Size = RoundLeft.Size;
+            ScoreLeft.Location = new Point(ScoreCentre.Left - ScoreLeft.Width, RoundLeft.Location.Y);
+
+            ScoreCount = new Label();
+            ScoreCount.BackColor = Color.FromArgb(100, Color.Black);
+            ScoreCount.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            ScoreCount.Font = new Font("Minecraft Ten", getScreenSize().Height / 75, FontStyle.Regular);
+            ScoreCount.TextAlign = ContentAlignment.MiddleCenter;
+            ScoreCount.Text = $"{globalData.score} Points";
+            ScoreCount.BorderStyle = BorderStyle.None;
+            ScoreCount.Size = ScoreCentre.Size;
+            ScoreCount.Location = new Point(ScoreCentre.Location.X + (ScoreCentre.Width / 2) - (ScoreCount.Width / 2), ScoreCentre.Location.Y + (ScoreCentre.Height / 2) - (ScoreCount.Height / 2));
+
+            this.Controls.Add(ScoreLeft);
+            this.Controls.Add(ScoreRight);
+            this.Controls.Add(ScoreCentre);
+            this.Controls.Add(ScoreCount);
+            ScoreCount.BringToFront();
         }
         private void OutputBoxInit()
         {
@@ -242,10 +295,19 @@ namespace chronosguessr
             Output.OutputText($"Image location: {GetImageLocation(images[randomIndex])}", outputLabel);
             globalData.imagePos = GetImageLocation(images[randomIndex]);
             currentPlay += 1;
+            UpdateUi();
+
+
 
             previousSelections.Add(randomIndex);
             PositionLabel.Text = "0, 0";
             PositionLabel.Location = new Point(Map.Left + (Map.Width / 2) - (PositionLabel.Width / 2), Map.Top - PositionLabel.Height - 5);
+        }
+
+        private void UpdateUi()
+        {
+            RoundCount.Text = $"Round {currentPlay}/{maxRounds}";
+            ScoreCount.Text = $"{globalData.score} Points";
         }
         private void PinInit()
         {
@@ -299,6 +361,7 @@ namespace chronosguessr
 
         private void CalcPoints(Point pos)
         {
+            Size screen = getScreenSize();
             Vector2 imagePos = globalData.imagePos;
 
             int dx = (int)(imagePos.X - globalData.currGuess.X);
@@ -308,9 +371,11 @@ namespace chronosguessr
             //score = 1000 - score;
 
             overallScore += score;
+            globalData.score = overallScore;
             Output.OutputText($"Distance: {distance}", outputLabel);
             Output.OutputText($"new score: {overallScore}", outputLabel);
             Output.OutputText($"added score: {score}", outputLabel);
+            NotificationUtils.SpawnNotif($"+{score}", 1000, screen.Width / 2 - TextRenderer.MeasureText($"+{score}", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
         }
 
         private void PositionLabel_Click(object sender, EventArgs e)

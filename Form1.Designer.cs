@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.playButton = new System.Windows.Forms.Button();
-            this.leaderboardLabel = new System.Windows.Forms.Label();
             this.outputLabel = new System.Windows.Forms.Label();
             this.nameBox = new System.Windows.Forms.TextBox();
             this.nameLabel = new System.Windows.Forms.Label();
@@ -52,17 +51,6 @@
             this.playButton.Text = "button1";
             this.playButton.UseVisualStyleBackColor = false;
             this.playButton.Click += new System.EventHandler(this.playButton_Click);
-            // 
-            // leaderboardLabel
-            // 
-            this.leaderboardLabel.AutoSize = true;
-            this.leaderboardLabel.BackColor = System.Drawing.Color.Transparent;
-            this.leaderboardLabel.ForeColor = System.Drawing.Color.White;
-            this.leaderboardLabel.Location = new System.Drawing.Point(588, 345);
-            this.leaderboardLabel.Name = "leaderboardLabel";
-            this.leaderboardLabel.Size = new System.Drawing.Size(38, 15);
-            this.leaderboardLabel.TabIndex = 3;
-            this.leaderboardLabel.Text = "label1";
             // 
             // outputLabel
             // 
@@ -112,7 +100,6 @@
             this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.nameBox);
             this.Controls.Add(this.outputLabel);
-            this.Controls.Add(this.leaderboardLabel);
             this.Controls.Add(this.playButton);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -128,7 +115,6 @@
         #endregion
 
         private Button playButton;
-        private Label leaderboardLabel;
         private Label outputLabel;
         private TextBox nameBox;
         private Label nameLabel;

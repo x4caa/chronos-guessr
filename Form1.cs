@@ -96,8 +96,8 @@ namespace chronosguessr
             playButton.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 38.4), FontStyle.Bold);
             playButton.Size = new Size(screen.Width / 3, screen.Height / 8);
             playButton.FlatAppearance.BorderSize = 0;
-            playButton.BackColor = ColorTranslator.FromHtml("#007FE0");
-            playButton.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            playButton.BackColor = Palette.BackLight;
+            playButton.ForeColor = Palette.Text;
 
             playButton.Location = new Point(screen.Width / 2 - playButton.Width / 2, screen.Height / 2 - playButton.Height / 2 - screen.Height / 10);
         }
@@ -146,8 +146,8 @@ namespace chronosguessr
                 Panel SettingBack = new Panel();
                 SettingBack.Name = "SMenuBack";
                 SettingBack.BorderStyle = BorderStyle.None;
-                SettingBack.BackColor = ColorTranslator.FromHtml("#102638");
-                SettingBack.Size = new Size(screen.Width / 6, screen.Height / 4);
+                SettingBack.BackColor = Palette.BackDark;
+                SettingBack.Size = new Size(screen.Width / 6, screen.Height / 10);
                 SettingBack.Location = new Point(screen.Width - SettingBack.Width - 5, SettingsGear.Bottom + 5);
                 SettingBack.Paint += SettingBack_Paint;
 
@@ -155,7 +155,7 @@ namespace chronosguessr
                 SettingLabel.Name = "SMenuLabel";
                 SettingLabel.BorderStyle = BorderStyle.None;
                 SettingLabel.BackColor = SettingBack.BackColor;
-                SettingLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+                SettingLabel.ForeColor = Palette.Text;
                 SettingLabel.Text = "SETTINGS";
                 SettingLabel.Font = new Font("Minecraft Ten", screen.Width / 100, FontStyle.Bold);
                 Size SettingLabelSize = TextRenderer.MeasureText(SettingLabel.Text, SettingLabel.Font);
@@ -247,7 +247,7 @@ namespace chronosguessr
 
             nameLabel.Text = "NAME";
             nameLabel.Font = new Font("Minecraft Ten", (float)Math.Round(screen.Width / 100.0), FontStyle.Bold);
-            nameLabel.ForeColor = ColorTranslator.FromHtml("#f7fafd");
+            nameLabel.ForeColor = Palette.Text;
             nameLabel.BackColor = Color.Transparent;
             nameLabel.Size = TextRenderer.MeasureText(nameLabel.Text, nameLabel.Font);
             nameLabel.Location = new Point(screen.Width / 2 - nameLabel.Width / 2, playButton.Bottom + 5);
@@ -261,8 +261,8 @@ namespace chronosguessr
             nameBox.MaxLength = 16;
             nameBox.Font = new Font("Mojangles", (float)Math.Round(screen.Width / 120.0), FontStyle.Underline);
             nameBox.Size = new Size((int)(playButton.Width / 1.5), TextRenderer.MeasureText("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", nameBox.Font).Height);
-            nameBox.BackColor = ColorTranslator.FromHtml("#102638");
-            nameBox.ForeColor = ColorTranslator.FromHtml("#f7fafd");
+            nameBox.BackColor = Palette.BackDark;
+            nameBox.ForeColor = Palette.Text;
             nameBox.BorderStyle = BorderStyle.None;
             nameBox.TextAlign = HorizontalAlignment.Center;
             nameBox.Location = new Point(screen.Width / 2 - nameBox.Width / 2, nameLabel.Bottom + 2);

@@ -253,7 +253,7 @@ namespace chronosguessr
 
             return height - workingAreaHeight;
         }
-        private Vector2 GetImageLocation(string filePath)
+        private static Vector2 GetImageLocation(string filePath)
         {
             string fileName = Path.GetFileNameWithoutExtension(filePath);
             Match match = Regex.Match(fileName, @"(-?\d+),(-?\d+)");
@@ -294,6 +294,10 @@ namespace chronosguessr
             Output.OutputText($"Loaded image: {images[randomIndex]}", outputLabel);
             Output.OutputText($"Image location: {GetImageLocation(images[randomIndex])}", outputLabel);
             globalData.imagePos = GetImageLocation(images[randomIndex]);
+            if (currentPlay > maxRounds)
+            {
+                EndGame();
+            }
             currentPlay += 1;
             UpdateUi();
 
@@ -303,7 +307,24 @@ namespace chronosguessr
             PositionLabel.Text = "0, 0";
             PositionLabel.Location = new Point(Map.Left + (Map.Width / 2) - (PositionLabel.Width / 2), Map.Top - PositionLabel.Height - 5);
         }
+        private bool gameEnded = false;
+        private void EndGame()
+        {
+            gameEnded = true;
 
+            Size screen = getScreenSize();
+            Label PointsLabel = new Label();
+            PointsLabel.Text = $"{globalData.score} Points!";
+            PointsLabel.Font = new Font("Minecraft Ten", screen.Width / 38.4f, FontStyle.Bold);
+            PointsLabel.BackColor = Color.Transparent;
+            PointsLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            Size textSize = TextRenderer.MeasureText(PointsLabel.Text, PointsLabel.Font);
+            PointsLabel.Size = textSize;
+            PointsLabel.Location = new Point(screen.Width / 2 - textSize.Width / 2, screen.Height / 2 - textSize.Height);
+
+            Button PlayAgainButton = new Button();
+            //PlayAgainButton
+        }
         private void UpdateUi()
         {
             RoundCount.Text = $"Round {currentPlay}/{maxRounds}";

@@ -10,7 +10,7 @@
             Label notificationLabel = new Label();
             notificationLabel.Text = message;
             notificationLabel.Font = new Font("Minecraft Ten", Form1.getScreenSize().Width / 100, FontStyle.Regular);
-            notificationLabel.ForeColor = ColorTranslator.FromHtml("#F7FAFD");
+            notificationLabel.ForeColor = Palette.Text;
             notificationLabel.BackColor = Color.Transparent; // Start with a transparent background
             notificationLabel.Size = TextRenderer.MeasureText(message, notificationLabel.Font);
             notificationLabel.Location = new System.Drawing.Point(x, y);

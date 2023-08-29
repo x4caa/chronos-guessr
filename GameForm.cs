@@ -366,8 +366,9 @@ namespace chronosguessr
 
             int dx = (int)(imagePos.X - globalData.currGuess.X);
             int dy = (int)(imagePos.Y - globalData.currGuess.Y);
-            int distance = (int)Math.Sqrt(dx * dx + dy * dy);
-            int score = (int)Math.Round(1000.0 / (distance + 1));
+            double distance = Math.Sqrt(dx * dx + dy * dy);
+            int score = (int)Math.Max(500 - distance, 0);
+            //int score = (int)Math.Round(1000.0 / (distance + 1));
             //score = 1000 - score;
 
             overallScore += score;

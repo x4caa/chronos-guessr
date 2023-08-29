@@ -20,7 +20,6 @@ namespace chronosguessr
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             OutputBoxInit();
-            Output.OutputText("Welcome to Chronos Guessr!", outputLabel);
 
             MapInit();
             GuessButtonInit();
@@ -44,7 +43,6 @@ namespace chronosguessr
             {
                 int scaledX = (int)((float)relativeClickPoint.X / Map.Width * 1024);
                 int scaledY = (int)((float)relativeClickPoint.Y / Map.Height * 1024);
-                Output.OutputText($"CLICKED AT: {scaledX - 512}, {scaledY - 512}", outputLabel);
                 globalData.currGuess = new Vector2(scaledX - 512, scaledY - 512);
                 SpawnPin(new Vector2(Map.Location.X + relativeClickPoint.X, Map.Location.Y + relativeClickPoint.Y));
                 PositionLabel.Text = $"{scaledX - 512}, {scaledY - 512}";
@@ -276,8 +274,6 @@ namespace chronosguessr
             } while (previousSelections.Contains(randomIndex));
 
             this.BackgroundImage = new System.Drawing.Bitmap(images[randomIndex]);
-            Output.OutputText($"Loaded image: {images[randomIndex]}", outputLabel);
-            Output.OutputText($"Image location: {GetImageLocation(images[randomIndex])}", outputLabel);
             globalData.imagePos = GetImageLocation(images[randomIndex]);
 
 
@@ -376,8 +372,6 @@ namespace chronosguessr
 
             int scaledX = (int)((float)(globalData.currPin.Location.X - globalData.currPin.Width / 2) / Map.Width * 1024);
             int scaledY = (int)((float)(globalData.currPin.Location.X - globalData.currPin.Height / 2) / Map.Height * 1024);
-            Output.OutputText($"Spawned pin at: {position}", outputLabel);
-            Output.OutputText($"pin is at {scaledX - Map.Location.X - 512}, {scaledY - Map.Location.Y - 512}", outputLabel);
         }
 
         private void GuessButton_Click(object sender, EventArgs e)
@@ -409,7 +403,7 @@ namespace chronosguessr
             int dy = (int)(imagePos.Y - globalData.currGuess.Y);
             double distance = Math.Sqrt(dx * dx + dy * dy);
             int score;
-            if (distance >= 5)
+            if (distance <= 5)
             {
                 score = 500;
             }
@@ -420,9 +414,6 @@ namespace chronosguessr
 
             overallScore += score;
             globalData.score = overallScore;
-            Output.OutputText($"Distance: {distance}", outputLabel);
-            Output.OutputText($"new score: {overallScore}", outputLabel);
-            Output.OutputText($"added score: {score}", outputLabel);
             NotificationUtils.SpawnNotif($"+{score}", 1000, screen.Width / 2 - TextRenderer.MeasureText($"+{score}", new Font("Minecraft Ten", screen.Width / 100, FontStyle.Regular)).Width / 2, 50, this, outputLabel);
         }
 
